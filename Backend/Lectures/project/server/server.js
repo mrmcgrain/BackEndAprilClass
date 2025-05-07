@@ -13,6 +13,11 @@ app.get("/test", (req, res) => {
     res.send("All good")
 })
 
+app.get("/2ndRoute", (req, res) => {
+    console.log("2nd Route Hit")
+    res.json({msg : "2nd route is groovy"})
+
+})
 
 
 
