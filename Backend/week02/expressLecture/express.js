@@ -2,6 +2,11 @@ const express = require('express')
 const app = express()
 app.use(express.json()) // allows access to the request.body
 const uuid = require('uuid')
+const mongoose = require('mongoose')
+
+require('dotenv').config()
+
+const Todo = require("./models/todo.model")
 
 
 // let db = ["test", "eat", "sleep", "walk"]
@@ -25,13 +30,14 @@ app.get("/query", (req, res) => {
 app.post("/post", (req, res) => {
     console.log("POST route hit", req.body)
     // Create new todo with UUID
-    const newTodo = {
-        id: uuid.v4(),
-        task: req.body.todo
-    }
+    // const newTodo = {
+    //     id: uuid.v4(),
+    //     task: req.body.todo
+    // }
     // Add to database
-    db.push(newTodo)
-    res.json({ msg: "Todo created", todo: newTodo, db })
+    // db.push(newTodo)
+    Todo.create(req.body)
+    res.json({ msg: "Todo created" })
 })
 
 app.delete("/delete/:id", (req, res) => {
@@ -42,12 +48,20 @@ app.delete("/delete/:id", (req, res) => {
     res.json(db)
 })
 
-app.put("/put/:todo", (req, res) => {
-    console.log("PUT route hit --", "params:", req.params.todo, "req.body:", req.body)
+app.put("/put/:id", (req, res) => {
+    console.log("PUT route hit --", "params:", req.params.id, "req.body:", req.body)
+    // find id in params in JSON, alter with req.body.todo
+
 })
 
 
 app.listen(3000, () => {
+
+    mongoose.connect(process.env.MONGO_URI)
+        .then(() => {
+            console.log("Database Connected")
+        })
+
     console.log("Server is Running")
 })
 
